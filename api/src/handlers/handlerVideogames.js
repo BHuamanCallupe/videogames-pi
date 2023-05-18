@@ -1,21 +1,27 @@
 const { getVideogamesAPI, getVideogamesAPIbyID, getVideogamesAPIbyName } = require("../utils/index");
 const { getVideogamesDB, getVideogamesDBbyID, getVideogamesDBbyName, createVideogame } = require("../controllers/videogamesController");
-const { cleanArray, cleanAttributePlatforms } = require("../helpers/index");
+const { cleanArray, cleanAttributePlatforms, cleanVideogameByID, cleanGenresOfDB } = require("../helpers/index");
+const { getGenresByVideogameID } = require("../controllers/genresController")
 
 const handlerGETvideogames = async (req, res) => {
     try {
         let api_data = await getVideogamesAPI();
         let db_data = await getVideogamesDB();
+
         if (!Array.isArray(api_data)) {
             throw Error(api_data);
         } else if (!Array.isArray(db_data)) {
             throw Error(db_data);
         } else {
+            //limpiamos el array q viene de la API
             api_data = [...cleanArray(api_data)];
 
             api_data.forEach((element, i) => {
                 api_data[i]["platforms"] = [...cleanAttributePlatforms(element.platforms)];
             });
+
+            //limpiamos el array q viene de la DB
+            db_data = [...cleanGenresOfDB(db_data)]
 
             res.status(200).json([...db_data, ...api_data]);
         }
@@ -30,8 +36,13 @@ const handlerByIDvideogames = async (req, res) => {
 
         const videogame = isNaN(Number(idVideogame)) ? await getVideogamesDBbyID(idVideogame) : await getVideogamesAPIbyID(idVideogame);
 
-        if (videogame) {
-            return res.status(200).json(videogame);
+        if (videogame.id || videogame.dataValues) {
+            if (videogame.dataValues) { //db
+                const genresArrayByVideogameID = await getGenresByVideogameID(videogame.dataValues.id);
+                return res.status(200).json({ ...videogame.dataValues, genres: genresArrayByVideogameID });
+            }
+            //api
+            return res.status(200).json(cleanVideogameByID(videogame));
         } else {
             throw Error(videogame);
         }
@@ -55,11 +66,15 @@ const handlerByNamevideogames = async (req, res) => {
             } else if (db_search.length == 0 && api_search.length == 0) {
                 res.status(404).json({ message: `There are no video games with: ${search}` });
             } else {
+                // limpiamos el array que viene de la api
                 api_search = [...cleanArray(api_search)];
 
                 api_search.forEach((element, i) => {
                     api_search[i]["platforms"] = [...cleanAttributePlatforms(element.platforms)];
                 });
+
+                //limpiamos el array q viene de la DB
+                db_search = [...cleanGenresOfDB(db_search)]
 
                 res.status(200).json([...db_search, ...api_search].slice(0, 15));
             }

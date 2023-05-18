@@ -33,6 +33,10 @@ module.exports = (sequelize) => {
     rating: {
       type: DataTypes.INTEGER,
       defaultValue: 0.0
+    },
+    created: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     }
   }, {
     timestamps: false

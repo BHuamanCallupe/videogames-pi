@@ -8,16 +8,28 @@ const getVideogamesDB = async () => {
             through: {
                 attributes: []
             }
-        }
+        },
+        // raw: true,
+        // nest: true
     });
 }
 
 const getVideogamesDBbyID = async (id) => {
-    return await Videogame.findByPk(id);
+    return await Videogame.findOne({ where: { id: id } });
 }
 
 const getVideogamesDBbyName = async (search) => {
-    let arrayByName = await Videogame.findAll();
+    let arrayByName = await Videogame.findAll({
+        include: {
+            model: Genre,
+            attributes: ["name"],
+            through: {
+                attributes: []
+            }
+        },
+        // raw: true,
+        // nest: true
+    });
     return arrayByName.filter(element => element.name.includes(search));
 }
 
