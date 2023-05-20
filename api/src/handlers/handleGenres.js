@@ -19,7 +19,7 @@ const handleGETgenres = async (req, res) => {
 const handlePOSTgenres = async (req, res) => {
     try {
         let genres = await getGenresAPI();
-        genres = [...cleanGenres(genres)];
+        // genres = [...cleanGenres(genres)];
 
         const created = await createGenres(genres);
 

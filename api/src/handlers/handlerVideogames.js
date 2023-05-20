@@ -5,7 +5,9 @@ const { getGenresByVideogameID } = require("../controllers/genresController")
 
 const handlerGETvideogames = async (req, res) => {
     try {
-        let api_data = await getVideogamesAPI();
+        const { page } = req.query;
+
+        let api_data = await getVideogamesAPI(page);
         let db_data = await getVideogamesDB();
 
         if (!Array.isArray(api_data)) {

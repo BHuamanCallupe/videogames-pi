@@ -1,9 +1,15 @@
 import React from 'react'
 
 const SearchBar = () => {
+
+  const handlerSearch = () => {
+
+  }
+
   return (
     <div>
-        <input type="text" placeholder="Search" />
+        <label htmlFor='search'>Search: </label>
+        <input type="text" placeholder="videogame name" id='search' onChange={handlerSearch}/>
     </div>
   )
 }

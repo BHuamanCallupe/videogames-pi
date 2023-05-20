@@ -5,8 +5,8 @@ const {
 } = process.env;
 
 // videogames
-const getVideogamesAPI = async () => {
-    return await axios.get(`${URL}/games?key=${API_KEY}`)
+const getVideogamesAPI = async (page) => {
+    return await axios.get(`${URL}/games?key=${API_KEY}&page=${page}`)
         .then(response => response.data.results)
         .catch(error => error)
 }
@@ -18,7 +18,7 @@ const getVideogamesAPIbyID = async (id) => {
 }
 
 const getVideogamesAPIbyName = async (game) => {
-    return await axios.get(`${URL}/games?search=${game}&&key=${API_KEY}`)
+    return await axios.get(`${URL}/games?search=${game}&key=${API_KEY}`)
         .then(response => response.data.results)
         .catch(error => error)
 }

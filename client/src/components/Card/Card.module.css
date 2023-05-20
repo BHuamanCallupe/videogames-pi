@@ -1,0 +1,23 @@
+.card {
+    word-wrap: break-word;
+    text-align: center;
+    border-radius: 20px;
+    min-width: 150px;
+    min-height: 150px;
+}
+
+.card p {
+    word-wrap: break-word;
+}
+
+figure {
+    position: relative;
+}
+
+img {
+    object-fit: cover;
+    width: 180px;
+    height: 150px;
+    margin: 0;
+    padding: 0;
+}
