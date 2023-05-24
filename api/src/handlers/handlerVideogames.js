@@ -1,13 +1,12 @@
 const { getVideogamesAPI, getVideogamesAPIbyID, getVideogamesAPIbyName } = require("../utils/index");
 const { getVideogamesDB, getVideogamesDBbyID, getVideogamesDBbyName, createVideogame } = require("../controllers/videogamesController");
-const { cleanArray, cleanAttributePlatforms, cleanVideogameByID, cleanGenresOfDB } = require("../helpers/index");
+const { cleanArray, cleanAttributePlatforms, cleanVideogameByID, cleanGenresOfDB, cleanArrayByName } = require("../helpers/index");
 const { getGenresByVideogameID } = require("../controllers/genresController")
 
 const handlerGETvideogames = async (req, res) => {
     try {
-        const { page } = req.query;
 
-        let api_data = await getVideogamesAPI(page);
+        let api_data = await getVideogamesAPI();
         let db_data = await getVideogamesDB();
 
         if (!Array.isArray(api_data)) {
@@ -16,16 +15,15 @@ const handlerGETvideogames = async (req, res) => {
             throw Error(db_data);
         } else {
             //limpiamos el array q viene de la API
-            api_data = [...cleanArray(api_data)];
+            api_data = [...cleanArray(api_data)]
 
-            api_data.forEach((element, i) => {
-                api_data[i]["platforms"] = [...cleanAttributePlatforms(element.platforms)];
-            });
-
-            //limpiamos el array q viene de la DB
+            // //limpiamos el array q viene de la DB
             db_data = [...cleanGenresOfDB(db_data)]
 
-            res.status(200).json([...db_data, ...api_data]);
+            res.status(200).json({
+                database: [...db_data],
+                api: [...api_data],
+            });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -66,19 +64,17 @@ const handlerByNamevideogames = async (req, res) => {
             } else if (!Array.isArray(db_search)) {
                 throw Error(db_search);
             } else if (db_search.length == 0 && api_search.length == 0) {
-                res.status(404).json({ message: `There are no video games with: ${search}` });
+                res.status(200).json({ message: `There are no video games with: ${search}` });
             } else {
                 // limpiamos el array que viene de la api
-                api_search = [...cleanArray(api_search)];
+                api_search = [...cleanArrayByName(api_search)];
 
-                api_search.forEach((element, i) => {
-                    api_search[i]["platforms"] = [...cleanAttributePlatforms(element.platforms)];
-                });
-
-                //limpiamos el array q viene de la DB
+                // //limpiamos el array q viene de la DB
                 db_search = [...cleanGenresOfDB(db_search)]
-
-                res.status(200).json([...db_search, ...api_search].slice(0, 15));
+                res.status(200).json({
+                    database: [...db_search],
+                    api: [...api_search],
+                });
             }
         } else {
             return await handlerGETvideogames(req, res);

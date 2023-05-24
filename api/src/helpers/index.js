@@ -33,10 +33,26 @@ const cleanArray = (array) => {
             id: element.id,
             name: element.name,
             released: element.released,
-            platforms: element.platforms,
+            platforms: cleanAttributePlatforms(element.platforms),
             image: element.background_image,
             rating: element.rating,
             genres: cleanGenres(element.genres),
+        }
+    })
+}
+
+const cleanArrayByName = (array) => {
+    return array.map(element => {
+        if (element.platforms && element.genres.length && element.background_image) {
+            return {
+                id: element.id,
+                name: element.name,
+                released: element.released,
+                platforms: element.platforms ? cleanAttributePlatforms(element.platforms) : null,
+                image: element.background_image,
+                rating: element.rating,
+                genres: cleanGenres(element.genres),
+            }
         }
     })
 }
@@ -63,5 +79,6 @@ module.exports = {
     cleanGenres,
     cleanAttributePlatforms,
     cleanVideogameByID,
-    cleanGenresOfDB
+    cleanGenresOfDB,
+    cleanArrayByName
 }

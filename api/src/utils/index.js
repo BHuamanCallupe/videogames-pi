@@ -5,10 +5,21 @@ const {
 } = process.env;
 
 // videogames
-const getVideogamesAPI = async (page) => {
-    return await axios.get(`${URL}/games?key=${API_KEY}&page=${page}`)
-        .then(response => response.data.results)
-        .catch(error => error)
+const getVideogamesAPI = async (URL_ = `${URL}/games?key=${API_KEY}`, array = [], page = 1) => {
+    if (page == 5) {
+        let { data } = await axios.get(URL_);
+        array.push(data.results)
+        let results = [];
+        array.forEach((element, index) => {
+            element.forEach((element, index) => {
+                results.push(element)
+            })
+        });
+        return results;
+    }
+    let { data } = await axios.get(URL_);
+    array.push(data.results)
+    return getVideogamesAPI(data.next, array, ++page)
 }
 
 const getVideogamesAPIbyID = async (id) => {
@@ -17,10 +28,91 @@ const getVideogamesAPIbyID = async (id) => {
         .catch(error => error)
 }
 
-const getVideogamesAPIbyName = async (game) => {
-    return await axios.get(`${URL}/games?search=${game}&key=${API_KEY}`)
-        .then(response => response.data.results)
-        .catch(error => error)
+const getVideogamesAPIbyName = async (game, URL_ = `${URL}/games`, array = [], page = 1) => {
+    if (!URL_.includes("page")) {
+        let { data } = await axios.get(`${URL_}?search=${game}&key=${API_KEY}`);
+        if (data.results.length === 0) {
+            return array;
+        } else if (data.next) {
+            array.push(data.results)
+            return getVideogamesAPIbyName(game, data.next, array, ++page)
+        } else {
+            array.push(data.results)
+            let results = [];
+            array.forEach((element, index) => {
+                element.forEach((element, index) => {
+                    results.push(element)
+                })
+            });
+            return results;
+        }
+    } else {
+        let { data } = await axios.get(`${URL_}`);
+        if (data.next) {
+            if (page < 5) {
+                array.push(data.results)
+                return getVideogamesAPIbyName(game, data.next, array, ++page)
+            }
+            array.push(data.results)
+            let results = [];
+            array.forEach((element, index) => {
+                element.forEach((element, index) => {
+                    results.push(element)
+                })
+            });
+            return results;
+        } else {
+            array.push(data.results)
+            let results = [];
+            array.forEach((element, index) => {
+                element.forEach((element, index) => {
+                    results.push(element)
+                })
+            });
+            return results;
+        }
+    }
+
+    if (data.results.length === 0) {
+        return array;
+    } else if (data.next) {
+        if (page == 5) {
+            array.push(data.results)
+            let results = [];
+            array.forEach((element, index) => {
+                element.forEach((element, index) => {
+                    results.push(element)
+                })
+            });
+            return results;
+        }
+        array.push(data.results)
+        return getVideogamesAPIbyName(game, data.next, array, ++page)
+    } else {
+        array.push(data.results)
+        let results = [];
+        array.forEach((element, index) => {
+            element.forEach((element, index) => {
+                results.push(element)
+            })
+        });
+        return results;
+    }
+    // console.log(data);
+    // if (page == 5) {
+    //     let { data } = await axios.get(URL_);
+    //     array.push(data.results)
+    //     let results = [];
+    //     array.forEach((element, index) => {
+    //         element.forEach((element, index) => {
+    //             results.push(element)
+    //         })
+    //     });
+    //     return results;
+    // }
+    // let { data } = await axios.get(URL_);
+    // array.push(data.results)
+    // return getVideogamesAPI(data.next, array, ++page)
 }
 
 // genres
