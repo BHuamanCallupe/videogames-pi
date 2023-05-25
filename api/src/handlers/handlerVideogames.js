@@ -86,11 +86,11 @@ const handlerByNamevideogames = async (req, res) => {
 
 const handlerPostVideogame = async (req, res) => {
     try {
-        const { name, description, platforms, image, released, genres } = req.body;
+        const { name, description, platforms, image, released, genres, rating } = req.body;
         if (!name || !description || !platforms || !image || !released || !genres) {
             throw Error("Missing Data");
         } else {
-            let videogame = await createVideogame({ name, description, platforms, image, released, genres });
+            let videogame = await createVideogame({ name, description, platforms, image, released, genres, rating });
 
             if (videogame.id) {
                 return res.status(201).json({ message: `${name} has been created succesfully.` });

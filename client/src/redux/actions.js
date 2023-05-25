@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { URL_GET_ALL_VIDEOGAMES, URL_SEARCH_VIDEOGAMES, URL_GET_GENRES } from "../consts"
+import { URL_GET_ALL_VIDEOGAMES, URL_SEARCH_VIDEOGAMES, URL_GET_GENRES, URL_POST_VIDEOGAME } from "../consts"
 
 export const getAllVideogames = () => {
     return async (dispatch) => {
@@ -19,6 +19,21 @@ export const getAllVideogames = () => {
         }
     }
 }
+
+export const postVideogames = (videogame) => {
+    return async (dispatch) => {
+        try {
+            const { data } = await axios.post(`${URL_POST_VIDEOGAME}`,videogame);
+            console.log(data);
+            dispatch(getAllVideogames());
+
+        } catch (error) {
+            console.log(error.response.data.error);
+        }
+    }
+}
+
+
 
 export const getVideogames = () => {
     return {

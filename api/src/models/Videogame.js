@@ -15,7 +15,7 @@ module.exports = (sequelize) => {
       unique: true
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     platforms: {
@@ -23,7 +23,7 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     image: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     released: {
@@ -31,8 +31,8 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     rating: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0.0
+      type: DataTypes.FLOAT,
+      allowNull: false,
     },
     created: {
       type: DataTypes.BOOLEAN,

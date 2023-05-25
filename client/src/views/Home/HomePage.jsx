@@ -25,7 +25,7 @@ const HomePage = () => {
   // getVideogames();
   useEffect(() => {
     videogames.length === 0 && getVideogames();
-    genres.length === 0 && getAllGenres();;
+    genres.length === 0 && getAllGenres();
   }, [])
 
 
